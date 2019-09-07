@@ -1,15 +1,13 @@
 package main
 
 import (
-	"errors"
-	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-var kvMap = make(map[string]string)
-
 func resourceKv() *schema.Resource {
+	log.Printf("Initializing resourceKv\n")
 	return &schema.Resource{
 		Create: resourceKvCreate,
 		Read:   resourceKvRead,
@@ -30,37 +28,50 @@ func resourceKv() *schema.Resource {
 }
 
 func resourceKvCreate(d *schema.ResourceData, m interface{}) error {
+	log.Printf("resourceKv - create")
 	key := d.Get("key").(string)
-	value := d.Get("value").(string)
-	kvMap[key] = value
+	fkv := m.(*FileKV)
+	if !fkv.Exists(key) {
+		value := d.Get("value").(string)
+		fkv.Set(key, value)
+	}
+
 	d.SetId(key)
 	return resourceKvRead(d, m)
 }
 
 func resourceKvRead(d *schema.ResourceData, m interface{}) error {
+	log.Printf("resourceKv - read")
+	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
-	if value, ok := kvMap[key]; ok {
-		d.Set("value", value)
+	if fkv.Exists(key) {
+		d.Set("value", fkv.Get(key))
+		return nil
+	} else {
+		d.SetId("")
 		return nil
 	}
-
-	return errors.New(fmt.Sprintf("key %v does not exist", key))
 }
 
 func resourceKvUpdate(d *schema.ResourceData, m interface{}) error {
+	log.Printf("resourceKv - update")
+	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
-	if _, ok := kvMap[key]; ok {
-		kvMap[key] = d.Get("value").(string)
+	if fkv.Exists(key) {
+		val := d.Get("value").(string)
+		fkv.Set(key, val)
 	}
 
 	return resourceKvRead(d, m)
 }
 
 func resourceKvDelete(d *schema.ResourceData, m interface{}) error {
+	log.Printf("resourceKv - delete")
+	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
-	if _, ok := kvMap[key]; ok {
-		delete(kvMap, key)
+	if fkv.Exists(key) {
+		fkv.Remove(key)
 	}
 
-	return nil
+	return resourceKvRead(d, m)
 }
