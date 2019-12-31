@@ -16,8 +16,8 @@ cd custom-providers/kv
 
 go build -o terraform.d/plugins/darwin_amd64/terraform-provider-kv
 
-terraform init
-terraform apply
+Run the validation script and examine the traces for lifecycle operations
+./validate.sh
 
 
  
