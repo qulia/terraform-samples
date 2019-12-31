@@ -1,1 +1,2 @@
-.terraform/
+kvStore
+terraform.state
