@@ -1,2 +1,3 @@
 kvStore
-terraform.state
+terraform.tfstate
+terraform.tfstate.backup
