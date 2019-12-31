@@ -20,11 +20,11 @@ func NewFileKV() *FileKV {
 		fkv.kvMap = make(map[string]string)
 		empty, _ := json.Marshal(make(map[string]string))
 		_, _ = os.Create(fileName)
-		ioutil.WriteFile(fileName, empty, 0644)
+		_ = ioutil.WriteFile(fileName, empty, 0644)
 		return fkv
 	}
 
-	json.Unmarshal(data, &fkv.kvMap)
+	_ = json.Unmarshal(data, &fkv.kvMap)
 	return fkv
 }
 
@@ -33,7 +33,6 @@ func (fkv *FileKV) Exists(key string) bool {
 	return exists
 }
 func (fkv *FileKV) Set(key string, value string) error {
-	log.Printf("fkv: %v", *fkv)
 	log.Printf("fkv: %v", fkv.kvMap)
 	fkv.kvMap[key] = value
 
@@ -41,8 +40,7 @@ func (fkv *FileKV) Set(key string, value string) error {
 }
 
 func (fkv *FileKV) Get(key string) string {
-	val, _ := fkv.kvMap[key]
-	return val
+	return fkv.kvMap[key]
 }
 
 func (fkv *FileKV) Remove(key string) error {

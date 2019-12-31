@@ -15,11 +15,11 @@ func resourceKv() *schema.Resource {
 		Delete: resourceKvDelete,
 
 		Schema: map[string]*schema.Schema{
-			"key": &schema.Schema{
+			"key": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"value": &schema.Schema{
+			"value": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -28,12 +28,12 @@ func resourceKv() *schema.Resource {
 }
 
 func resourceKvCreate(d *schema.ResourceData, m interface{}) error {
-	log.Printf("resourceKv - create")
+	log.Printf("resourceKv - create\n")
 	key := d.Get("key").(string)
 	fkv := m.(*FileKV)
 	if !fkv.Exists(key) {
 		value := d.Get("value").(string)
-		fkv.Set(key, value)
+		_ = fkv.Set(key, value)
 	}
 
 	d.SetId(key)
@@ -41,11 +41,11 @@ func resourceKvCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceKvRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("resourceKv - read")
+	log.Printf("resourceKv - read\n")
 	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
 	if fkv.Exists(key) {
-		d.Set("value", fkv.Get(key))
+		_ = d.Set("value", fkv.Get(key))
 		return nil
 	} else {
 		d.SetId("")
@@ -54,23 +54,23 @@ func resourceKvRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceKvUpdate(d *schema.ResourceData, m interface{}) error {
-	log.Printf("resourceKv - update")
+	log.Printf("resourceKv - update\n")
 	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
 	if fkv.Exists(key) {
 		val := d.Get("value").(string)
-		fkv.Set(key, val)
+		_ = fkv.Set(key, val)
 	}
 
 	return resourceKvRead(d, m)
 }
 
 func resourceKvDelete(d *schema.ResourceData, m interface{}) error {
-	log.Printf("resourceKv - delete")
+	log.Printf("resourceKv - delete\n")
 	fkv := m.(*FileKV)
 	key := d.Get("key").(string)
 	if fkv.Exists(key) {
-		fkv.Remove(key)
+		_ = fkv.Remove(key)
 	}
 
 	return resourceKvRead(d, m)
