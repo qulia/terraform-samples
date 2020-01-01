@@ -1,4 +1,5 @@
 kvStore
 terraform.tfstate
 terraform.tfstate.backup
-.terraform/
+.terraform
+.DS_Store
