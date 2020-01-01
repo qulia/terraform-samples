@@ -19,7 +19,7 @@ go build -o terraform.d/plugins/darwin_amd64/terraform-provider-kv
 Run the validation script and examine the traces for lifecycle operations
 ./validate.sh
 
-![tf state](TF%20state.png)
+![tf state](doc/TF%20state.png)
 
 
  
