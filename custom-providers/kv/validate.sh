@@ -16,7 +16,7 @@ read -p "Try
  - or leave it as is for no-op.
 Press any key to continue execution..."
 
-# Second apply with the state file will call read, create will not be called
+# Second apply
 terraform apply
 
 # will call delete
